@@ -80,6 +80,10 @@ get_collection_view_fields = (name) ->
     obj) or []
 
 Template._houston_collection_view.events
+  "click #date-input": (e) ->
+    e.preventDefault()
+    console.log('hey')
+    $(e.target).datepicker();
   "click a.houston-sort": (e) ->
       e.preventDefault()
       sort_key = this.name
@@ -192,6 +196,18 @@ Template._houston_collection_view.events
 
       value = Houston._convert_to_correct_type(field.name, field.value,
         collection)
+      switch final_key
+        when 'userId'
+          value = Meteor.user()._id
+        when 'author'
+          value = Meteor.user().username
+        when 'submitted'
+          value = new Date
+        when 'commentsCount'
+          value = 0
+        when 'votes'
+          value = 0
+
       doc_iter = new_doc
       for key in keys
         doc_iter[key] = {} unless doc_iter[key]
